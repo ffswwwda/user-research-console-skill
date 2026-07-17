@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图标系统演示 · 用户研究预测引擎</title>
+<style>
+  :root{--grad:linear-gradient(135deg,#00d4ff 0%,#a855f7 50%,#ff6b9d 100%)}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       background:#0a0a16;color:#e8e8f0;padding:40px}
+  h1{font-size:22px;margin:0 0 4px}
+  h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.sub{color:#9aa;margin:0 0 28px;font-size:13px}
+  .sec{margin:34px 0 14px;font-size:13px;letter-spacing:.08em;color:#a855f7;text-transform:uppercase}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:14px}
+  .cell{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+        border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .cell code{font-size:11px;color:#9aa}
+  .ic-svg{display:inline-block;vertical-align:middle;flex-shrink:0;stroke-linecap:round;stroke-linejoin:round;fill:none}
+  .box{width:46px;height:46px;border-radius:12px;background:var(--grad);
+       display:flex;align-items:center;justify-content:center;color:#fff}
+  .w-svg{width:26px;height:26px}
+</style>
+</head>
+<body>
+<!-- ====== SVG sprite（复制这一段到你的 <body> 开头） ====== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="uiGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00d4ff"/>
+      <stop offset=".5" stop-color="#a855f7"/>
+      <stop offset="1" stop-color="#ff6b9d"/>
+    </linearGradient>
+  </defs>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><line x1="4" y1="8" x2="20" y2="8"/><circle cx="9" cy="8" r="2.4"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.4"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M12 3 3 8l9 5 9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 11 11 8.5 15.5 13 13"/></symbol>
+  <symbol id="i-build" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h.01M15 15h.01M9 21v-3h6v3"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><rect x="4" y="8" width="16" height="12" rx="2.5"/><path d="M12 8V4M9 4h6"/><circle cx="9.5" cy="14" r="1.2" fill="url(#uiGrad)"/><circle cx="14.5" cy="14" r="1.2" fill="url(#uiGrad)"/><path d="M9 18h6"/></symbol>
+  <symbol id="i-steps" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M3 20h4v-5H3zM9 20h4V9H9zM15 20h4V4h-4z"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><polygon points="13 2 4 14 11 14 11 22 20 10 13 10 13 2"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15.5 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M17 19c0-2.3-1.2-4.2-3-5"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M9 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M15 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></symbol>
+  <symbol id="i-smile" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.2 2.5 2 3.5 2s2.5-.8 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M12 3c.5 3 3.5 4.5 3.5 8a3.5 3.5 0 0 1-7 0c0-1 .4-1.8 1-2.5C8.5 11 8 12.5 8 14a4 4 0 1 0 8 0c0-3.5-4-6-4-11z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 13.2 15.7 17.8M15.7 6.2 8.3 10.8"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M20.6 13.4 12 22l-9-9V3h10z"/><circle cx="7.5" cy="7.5" r="1.4"/></symbol>
+  <symbol id="i-bar" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M4 20h16"/><rect x="6" y="11" width="3" height="9" rx="1"/><rect x="11" y="6" width="3" height="14" rx="1"/><rect x="16" y="14" width="3" height="6" rx="1"/></symbol>
+  <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M9 2v6M15 2v6"/><path d="M7 8h10v3a5 5 0 0 1-10 0z"/><path d="M12 16v6"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6" fill="url(#uiGrad)"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.4L3 21l2.2-5.2A8.5 8.5 0 1 1 21 11.5z"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><polygon points="12 3 14.5 9 21 9.4 16 13.6 17.8 20 12 16.4 6.2 20 8 13.6 3 9.4 9.5 9"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><polyline points="17 3 21 7 17 11"/><path d="M21 7H7"/><polyline points="7 21 3 17 7 13"/><path d="M3 17h14"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="url(#uiGrad)" stroke-width="2"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></symbol>
+  <symbol id="w-fish" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 12c2.5-4 8-6 13-6 1.8 0 3.5.6 5 1.6L22 8v8l-2-1.6c-1.5 1-3.2 1.6-5 1.6-5 0-10.5-2-13-6z"/><circle cx="14" cy="11" r="1" fill="#1a1030"/></symbol>
+  <symbol id="w-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 3 8l9 5 9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+  <symbol id="w-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+  <symbol id="w-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/><path d="M2 14c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/></symbol>
+  <symbol id="w-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
+  <symbol id="w-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/></symbol>
+  <symbol id="w-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+  <symbol id="w-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2v6M15 2v6"/><path d="M7 8h10v3a5 5 0 0 1-10 0z"/><path d="M12 16v6"/></symbol>
+  <symbol id="w-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16"/><rect x="6" y="11" width="3" height="9" rx="1"/><rect x="11" y="6" width="3" height="14" rx="1"/><rect x="16" y="14" width="3" height="6" rx="1"/></symbol>
+</svg>
+
+<h1>用户研究预测引擎 · <span>图标系统</span></h1>
+<p class="sub">SVG sprite + 共享三色渐变（#00d4ff→#a855f7→#ff6b9d 135°）。绝不使用 emoji。复制上方 &lt;svg&gt; sprite 到你的 &lt;body&gt; 开头即可。</p>
+
+<div class="sec">渐变描边图标（UI：导航 / 卡 / 按钮 / 数据源）</div>
+<div class="grid" id="gradGrid"></div>
+
+<div class="sec">白色图标（放在渐变底色方块上的品牌 / 流程 / 架构图标）</div>
+<div class="grid" id="whiteGrid"></div>
+
+<script>
+  const grad=['i-grid','i-sliders','i-globe','i-gear','i-doc','i-layers','i-compass','i-build','i-bot','i-steps','i-zap','i-users','i-link','i-smile','i-flame','i-clock','i-share','i-tag','i-bar','i-plug','i-target','i-phone','i-msg','i-box','i-trend','i-star','i-moon','i-sun','i-swap','i-alert'];
+  const white=['w-fish','w-layers','w-chip','w-wave','w-doc','w-chat','w-phone','w-plug','w-bar'];
+  const gg=document.getElementById('gradGrid');
+  grad.forEach(id=>{const c=document.createElement('div');c.className='cell';
+    c.innerHTML=`<svg class="ic-svg" width="26" height="26"><use href="#${id}"/></svg><code>${id}</code>`;gg.appendChild(c)});
+  const wg=document.getElementById('whiteGrid');
+  white.forEach(id=>{const c=document.createElement('div');c.className='cell';
+    c.innerHTML=`<div class="box"><svg class="w-svg" viewBox="0 0 24 24"><use href="#${id}"/></svg></div><code>${id}</code>`;wg.appendChild(c)});
+</script>
+</body>
+</html>
